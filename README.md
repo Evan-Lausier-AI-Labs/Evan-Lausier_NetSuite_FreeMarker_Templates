@@ -4,14 +4,14 @@ A collection of NetSuite FreeMarker PDF templates, bank payment file templates, 
 
 ## Template Catalog
 
-### SimiTree Invoice Grouping
-Custom invoice templates for SimiTree with dynamic line grouping by project, task, and expense category.
+### Invoice Line Grouping
+Custom invoice templates with dynamic line grouping by project, task, and expense category.
 
 | Template | Description |
 |----------|-------------|
-| [simitree_invoice_v1.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v1.xml) | Basic grouping - Item, Task, Expense Category columns |
-| [simitree_invoice_v2_full_columns.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v2_full_columns.xml) | Full columns - Project, Item, Task, Expense, Resource, Description |
-| [simitree_invoice_v3_description_only.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v3_description_only.xml) | Streamlined - Description, Units, Rate, Amount only |
+| [grouped_invoice_v1.xml](./Invoice_Line_Grouping/grouped_invoice_v1.xml) | Basic grouping - Item, Task, Expense Category columns |
+| [grouped_invoice_v2_full_columns.xml](./Invoice_Line_Grouping/grouped_invoice_v2_full_columns.xml) | Full columns - Project, Item, Task, Expense, Resource, Description |
+| [grouped_invoice_v3_description_only.xml](./Invoice_Line_Grouping/grouped_invoice_v3_description_only.xml) | Streamlined - Description, Units, Rate, Amount only |
 
 ### ATC Custom Invoice
 Custom invoice template with facility hierarchy handling and bank payment information.
@@ -61,9 +61,9 @@ Reusable code snippets for NetSuite PDF templates.
 ### Invoice Templates
 - `custpage_custom_lines` - Runtime field for grouped line data (beforeLoad)
 - `custbody_st_invoice_print_datat` - Stored field for grouped line data (beforeSubmit)
-- `custcol_simitree_oa_task` - OA Project Task
-- `custcol_simitree_exp_category` - Expense Category
-- `custcol_simitree_oa_user_display` - OA User Display
+- `custcol_oa_task` - OA Project Task
+- `custcol_exp_category` - Expense Category
+- `custcol_oa_user_display` - OA User Display
 - `custcol_mfc_service_start_date` - Service Start Date
 - `custcol_mfc_service_end_date` - Service End Date
 
