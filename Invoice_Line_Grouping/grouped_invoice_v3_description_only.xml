@@ -1,0 +1,275 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<!-- Invoice with Line Grouping v3 - Streamlined with Description, Units, Rate, Amount only -->
+<!-- Uses custpage_custom_lines field populated by beforeLoad User Event script -->
+<pdf>
+<head>
+	<link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+	<#if .locale == "zh_CN">
+		<link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+	<#elseif .locale == "zh_TW">
+		<link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+	<#elseif .locale == "ja_JP">
+		<link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+	<#elseif .locale == "ko_KR">
+		<link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+	<#elseif .locale == "th_TH">
+		<link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+	</#if>
+    <macrolist>
+        <macro id="nlheader">
+            <table class="header" style="width: 100%;"><tr>
+	<td rowspan="8"><#if subsidiary.logo?length != 0><img src="${subsidiary.logo@url}" style="float: left; margin: 7px" /> </#if></td>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">[Company Name]</span></span></td>
+	</tr>
+	<tr>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">[Address Line 1]</span></span></td>
+	</tr>
+	<tr>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">[City, State ZIP]</span></span></td>
+	</tr>
+	<tr>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">P [Phone]</span></span></td>
+	</tr>
+	<tr>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">F [Fax]</span></span></td>
+	</tr>
+	<tr>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">[Email]</span></span></td>
+	</tr>
+	<tr>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">[Website]</span></span></td>
+	</tr>
+	<tr>
+	<td align="right"><span style="color:#061E47;"><span style="font-family:Arial,Helvetica,sans-serif;">EIN: [EIN]</span></span></td>
+	</tr></table>
+        </macro>
+        <macro id="nlfooter">
+            <table class="footer" style="width: 100%;"><tr>
+	<td>&nbsp;</td>
+	<td align="right"><pagenumber/> of <totalpages/></td>
+	</tr></table>
+        </macro>
+    </macrolist>
+    <style type="text/css">* {
+		<#if .locale == "zh_CN">
+			font-family: NotoSans, NotoSansCJKsc, sans-serif;
+		<#elseif .locale == "zh_TW">
+			font-family: NotoSans, NotoSansCJKtc, sans-serif;
+		<#elseif .locale == "ja_JP">
+			font-family: NotoSans, NotoSansCJKjp, sans-serif;
+		<#elseif .locale == "ko_KR">
+			font-family: NotoSans, NotoSansCJKkr, sans-serif;
+		<#elseif .locale == "th_TH">
+			font-family: NotoSans, NotoSansThai, sans-serif;
+		<#else>
+			font-family: NotoSans, sans-serif;
+		</#if>
+		}
+		table {
+			font-size: 6pt;
+			table-layout: fixed;
+		}
+        th {
+            font-weight: bold;
+            font-size: 7pt;
+            vertical-align: middle;
+            padding: 5px 6px 3px;
+            background-color: #e3e3e3;
+            color: #333333;
+        }
+        td {
+            padding: 3px 5px;
+        }
+		td p { align:left }
+        b {
+            font-weight: bold;
+            color: #333333;
+        }
+        table.header td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+        table.footer td {
+            padding: 0px;
+            font-size: 8pt;
+        }
+        table.itemtable th {
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+        table.body td {
+            padding-top: 2px;
+        }
+        table.total {
+            page-break-inside: avoid;
+        }
+        tr.totalrow {
+            background-color: #ffffff;
+            line-height: 200%;
+        }
+        td.totalboxtop {
+            font-size: 12pt;
+            background-color: #e3e3e3;
+        }
+        td.addressheader {
+            font-size: 8pt;
+            padding-top: 6px;
+            padding-bottom: 2px;
+        }
+        td.address {
+            padding-top: 0px;
+        }
+        td.totalboxmid {
+            font-size: 28pt;
+            padding-top: 20px;
+            background-color: #e3e3e3;
+        }
+        td.totalboxbot {
+            background-color: #e3e3e3;
+            font-weight: bold;
+        }
+        span.title {
+            font-size: 28pt;
+        }
+        span.number {
+            font-size: 16pt;
+        }
+        span.itemname {
+            line-height: 150%;
+        }
+        hr {
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+            height: 1px;
+        }
+</style>
+</head>
+<body header="nlheader" header-height="15%" footer="nlfooter" footer-height="50pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+    <table style="width: 100%; margin-top: 10px;"><tr>
+	<td class="addressheader" colspan="3" font-size="15pt"><strong><span style="font-family:Arial,Helvetica,sans-serif;">Invoice #${record.tranid}</span></strong></td>
+	<td align="right" class="addressheader" colspan="5" font-size="15pt"><b>Invoice To</b></td>
+	</tr>
+	<tr>
+	<td colspan="3"><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;"><strong>Date of Issue:</strong></span></span><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;"> ${record.trandate}<br/><strong>Payment Due Date: </strong></span></span><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;">${record.duedate}<br/><strong>Description: </strong></span></span><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;">${record.memo}<br /></span></span></td>
+	<td align="right" colspan="5">
+	<table cellpadding="0" cellspacing="0"><tr>
+		<td align="right" font-size="10pt"><strong><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;">${record.billaddressee}</span></span></strong></td>
+		</tr>
+      <#if record.billattention?has_content>
+      <tr>
+          <td align="right"><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;">ATTENTION: ${record.billattention}</span></span></td>
+		</tr>
+        </#if>
+		<tr>
+		<td align="right"><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;">${record.billaddr1}</span></span></td>
+		</tr>
+		<tr>
+		<td align="right"><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;">${record.billaddr2}</span></span></td>
+		</tr>
+		<tr>
+		<td align="right"><span style="color:#808080;"><span style="font-family:Arial,Helvetica,sans-serif;">${record.billcity} ${record.billstate} ${record.billzip}</span></span></td>
+		</tr>
+		<tr></tr></table>
+	</td>
+	</tr>
+	<tr></tr></table>
+
+<#if record.item?has_content>
+
+<table class="itemtable" style="width: 100%; margin-top: 10px;">
+  <tr>
+    <th colspan="12" style="background-color:#28282B;"><span style="color:#ecf0f1;">Project</span></th>
+  </tr>
+  <tr>
+    <td colspan="12"><span class="itemname">${record.item[0].job}</span></td>
+  </tr>
+</table>
+<hr /></#if>
+
+  <#assign data = record.custpage_custom_lines?eval>
+
+        <#if data?has_content>
+<table class="itemtable" style="width: 100%; margin-top: 10px;">
+
+<thead>
+	<tr>
+    <th align="left" colspan="6" style="background-color:#28282B;"><span style="color:#ecf0f1;">Description</span></th>
+	<th align="right" colspan="2" style="background-color:#28282B;"><span style="color:#ecf0f1;">Units</span></th>
+	<th align="right" colspan="3" style="background-color:#28282B;"><span style="color:#ecf0f1;">Rate</span></th>
+	<th align="right" colspan="3" style="background-color:#28282B;"><span style="color:#ecf0f1;">Amount</span></th>
+	</tr>
+</thead>
+ 
+<#list data as line>
+
+<tr>
+      <#if line.description?has_content>
+	 	<td colspan="6"><span class="itemname">${line.description?html}</span></td>
+	<#else>
+		<td colspan="6"><span class="itemname"> </span></td>
+	</#if>
+
+	<#if line.quantity?has_content>
+	 	<td align="right" colspan="2" line-height="150%">${line.quantity?string(",##0.00")}</td>
+	<#else>
+		<td align="right" colspan="2" line-height="150%"></td>
+	</#if>
+
+	<#if line.rate?has_content>
+	 	<td align="right" colspan="3">${line.rate?string(",##0.00")}</td>
+	<#else>
+		<td align="right" colspan="3"> </td>
+	</#if>
+
+	<#if line.amount?has_content>
+	 	<td align="right" colspan="3">${line.amount?string(",##0.00")}</td>
+	<#else>
+		<td align="right" colspan="3"> </td>
+	</#if>
+	</tr>
+	</#list> 
+</table>
+
+<hr />
+</#if>
+
+
+<table class="total" style="width: 100%; margin-top: 10px;"><tr>
+	<td colspan="4">&nbsp;</td>
+	<td align="right"><b>${record.subtotal@label}</b></td>
+	<td align="right">${record.subtotal}</td>
+	</tr>
+	<tr>
+	<td colspan="4">&nbsp;</td>
+	<td align="right"><b>${record.taxtotal@label} (${record.taxrate}%)</b></td>
+	<td align="right">${record.taxtotal}</td>
+	</tr>
+	<tr class="totalrow">
+	<td colspan="4">&nbsp;</td>
+	<td align="right"><span style="color:#ecf0f1;"><b>${record.total@label}</b></span></td>
+	<td align="right"><span style="color:#ecf0f1;"><b>${record.total}</b></span></td>
+	</tr>
+	<#if record.amountpaid?has_content>
+	<tr>
+	<td colspan="4">&nbsp;</td>
+	<td align="right"><b>${record.amountpaid@label}</b></td>
+	<td align="right">${record.amountpaid}</td>
+	</tr>
+	<tr>
+	<td colspan="4">&nbsp;</td>
+	<td align="right"><b>Amount Due</b></td>
+	<td align="right">${record.amountremaining}</td>
+	</tr>
+	<tr>
+	<td align="right">&nbsp;</td>
+	<td align="right">&nbsp;</td>
+	</tr>
+	<tr>
+	<td colspan="4">${paymentlinktext.paymentlinkheader}<br />${paymentlinktext.paymentlinkfootertext}</td>
+	<td align="right">&nbsp;</td>
+	<td align="right">&nbsp;</td>
+	</tr>
+	</#if></table>
+</body>
+</pdf>
