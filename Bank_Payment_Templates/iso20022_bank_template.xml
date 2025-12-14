@@ -1,0 +1,146 @@
+<#-- 
+    ISO 20022 Bank Payment Template
+    Format: ISO 20022 pain.001.001.03
+    Purpose: Generic credit transfer template
+-->
+
+<#-- Helper Functions -->
+<#function getReferenceNote payment>
+<#assign paidTransactions = transHash[payment.internalid]>
+<#assign referenceNote = "">
+<#assign paidTransactionsCount = paidTransactions?size>
+<#if (paidTransactionsCount >= 1)>
+<#list paidTransactions as transaction>
+<#if transaction.tranid?has_content>
+<#if referenceNote?has_content>
+<#assign referenceNote = referenceNote + ", " + transaction.tranid>
+<#else>
+<#assign referenceNote = transaction.tranid>
+</#if>
+</#if>
+</#list>
+</#if>
+<#return referenceNote>
+</#function>
+
+<#function convertSEPACharSet text>
+<#assign value = text>
+<#assign value = value?replace('&','+')>
+<#assign value = value?replace('*','.')>
+<#assign value = value?replace('$','.')>
+<#assign value = value?replace('%','.')>
+<#assign value = value?replace("'",' ')>
+<#return value>
+</#function>
+
+<#-- Template Output -->
+#OUTPUT START#
+<?xml version="1.0" encoding="utf-8"?>
+<Document xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03 pain.001.001.03.xsd" xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.03" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<CstmrCdtTrfInitn>
+<GrpHdr>
+<MsgId>${pfa.id}</MsgId>
+<CreDtTm>${pfa.custrecord_2663_file_creation_timestamp?date?string("yyyy-MM-dd")}T${pfa.custrecord_2663_file_creation_timestamp?time?string("HH:mm:ss")}</CreDtTm>
+<NbOfTxs>${payments?size?c}</NbOfTxs>
+<CtrlSum>${formatAmount(computeTotalAmount(payments),"decLessThan1")}</CtrlSum>
+<InitgPty>
+<Nm>${setMaxLength(convertToLatinCharSet(convertSEPACharSet(cbank.custpage_eft_custrecord_2663_statement_name)),70)}</Nm>
+<Id>
+<OrgId>
+<Othr>
+<Id>${cbank.custpage_eft_custrecord_2663_issuer_num}</Id>
+<SchmeNm>
+<Cd>BANK</Cd>
+</SchmeNm>
+</Othr>
+</OrgId>
+</Id>
+</InitgPty>
+</GrpHdr>
+<PmtInf>
+<PmtInfId>${pfa.id}</PmtInfId>
+<PmtMtd>TRF</PmtMtd>
+<BtchBookg>true</BtchBookg>
+<NbOfTxs>${payments?size?c}</NbOfTxs>
+<CtrlSum>${formatAmount(computeTotalAmount(payments),"decLessThan1")}</CtrlSum>
+<PmtTpInf>
+<SvcLvl>
+<Cd>SEPA</Cd>
+</SvcLvl>
+</PmtTpInf>
+<ReqdExctnDt>${pfa.custrecord_2663_process_date?string("yyyy-MM-dd")}</ReqdExctnDt>
+<Dbtr>
+<Nm>${setMaxLength(convertToLatinCharSet(convertSEPACharSet(cbank.custpage_eft_custrecord_2663_statement_name)),70)}</Nm>
+<PstlAdr>
+<StrtNm>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(cbank.custpage_eft_custrecord_2663_bank_address1)),70)}</StrtNm>
+<BldgNb>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(cbank.custpage_eft_custrecord_2663_bank_address2)),16)}</BldgNb>
+<PstCd>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(cbank.custpage_eft_custrecord_2663_bank_zip)),16)}</PstCd>
+<TwnNm>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(cbank.custpage_eft_custrecord_2663_bank_city)),35)}</TwnNm>
+<Ctry>${getCountryCode(cbank.custpage_eft_custrecord_2663_bank_country)}</Ctry>
+</PstlAdr>
+<Id>
+<OrgId>
+<Othr>
+<Id>${cbank.custpage_eft_custrecord_2663_issuer_num}</Id>
+<SchmeNm>
+<Cd>BANK</Cd>
+</SchmeNm>
+</Othr>
+</OrgId>
+</Id>
+</Dbtr>
+<DbtrAcct>
+<Id>
+<IBAN>${cbank.custpage_eft_custrecord_2663_iban}</IBAN>
+</Id>
+<Ccy>${getCurrencySymbol(cbank.custrecord_2663_currency)}</Ccy>
+</DbtrAcct>
+<DbtrAgt>
+<FinInstnId>
+<BIC>${cbank.custpage_eft_custrecord_2663_bic}</BIC>
+</FinInstnId>
+</DbtrAgt>
+<ChrgBr>SLEV</ChrgBr>
+<#list payments as payment>
+<#assign ebank = ebanks[payment_index]>
+<#assign entity = entities[payment_index]>
+<CdtTrfTxInf>
+<PmtId>
+<InstrId>${payment.tranid}</InstrId>
+<EndToEndId>${payment.tranid}</EndToEndId>
+</PmtId>
+<Amt>
+<InstdAmt Ccy="USD">${formatAmount(getAmount(payment),"decLessThan1")}</InstdAmt>
+</Amt>
+<CdtrAgt>
+<FinInstnId>
+<BIC>${ebank.custrecord_2663_entity_bic}</BIC>
+</FinInstnId>
+</CdtrAgt>
+<Cdtr>
+<Nm>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(buildEntityName(entity, true))),140)}</Nm>
+<PstlAdr>
+<StrtNm>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(ebank.custrecord_2663_entity_address1)),70)}</StrtNm>
+<BldgNb>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(ebank.custrecord_2663_entity_address2)),70)}</BldgNb>
+<PstCd>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(ebank.custrecord_2663_entity_zip)),16)}</PstCd>
+<TwnNm>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(ebank.custrecord_2663_entity_city)),16)}</TwnNm>
+<Ctry>${getCountryCode(ebank.custrecord_2663_entity_country)}</Ctry>
+</PstlAdr>
+</Cdtr>
+<CdtrAcct>
+<Id>
+<IBAN>${ebank.custrecord_2663_entity_iban}</IBAN>
+</Id>
+</CdtrAcct>
+<Purp>
+<Cd>SUPP</Cd>
+</Purp>
+<RmtInf>
+<Ustrd>${setMaxLength(convertSEPACharSet(convertToLatinCharSet(getReferenceNote(payment))),140)}</Ustrd>
+</RmtInf>
+</CdtTrfTxInf>
+</#list>
+</PmtInf>
+</CstmrCdtTrfInitn>
+</Document><#rt>
+#OUTPUT END#
