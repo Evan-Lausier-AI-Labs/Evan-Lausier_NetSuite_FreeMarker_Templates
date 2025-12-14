@@ -9,9 +9,9 @@ Custom invoice templates for SimiTree with dynamic line grouping by project, tas
 
 | Template | Description |
 |----------|-------------|
-| [simitree_invoice_v1.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v1.xml) | Basic grouping - Item, Task, Expense Category columns |
-| [simitree_invoice_v2_full_columns.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v2_full_columns.xml) | Full columns - Project, Item, Task, Expense, Resource, Description |
-| [simitree_invoice_v3_description_only.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v3_description_only.xml) | Streamlined - Description, Units, Rate, Amount only |
+| [invoice_v1.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v1.xml) | Basic grouping - Item, Task, Expense Category columns |
+| [invoice_v2_full_columns.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v2_full_columns.xml) | Full columns - Project, Item, Task, Expense, Resource, Description |
+| [invoice_v3_description_only.xml](./SimiTree_Invoice_Grouping/simitree_invoice_v3_description_only.xml) | Streamlined - Description, Units, Rate, Amount only |
 
 ### ATC Custom Invoice
 Custom invoice template with facility hierarchy handling and bank payment information.
