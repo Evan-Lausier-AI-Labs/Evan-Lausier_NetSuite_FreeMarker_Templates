@@ -1,4 +1,4 @@
-# SimiTree Invoice Grouping Templates
+# Invoice Grouping Templates
 FreeMarker PDF templates for SimiTree invoice printing with dynamic line grouping by project, task, and expense category.
 
 ## Versions
